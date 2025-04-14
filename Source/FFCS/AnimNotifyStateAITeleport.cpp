@@ -35,7 +35,9 @@ void UAnimNotifyStateAITeleport::NotifyTick(USkeletalMeshComponent* MeshComp, UA
 	const FVector PlayerLocation = Player->GetActorLocation();
 	const FVector PlayerToOwnerVec = (StartLocation - PlayerLocation).GetSafeNormal();
 	const FVector TeleportLocation = PlayerLocation + PlayerToOwnerVec * Offset;
-	const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(StartLocation, PlayerLocation);
+	FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(StartLocation, PlayerLocation);
+	LookAtRotation.Pitch = Owner->GetActorRotation().Pitch;
+	LookAtRotation.Roll = Owner->GetActorRotation().Roll;
 	const FVector InterpLocation = FMath::VInterpTo(StartLocation, TeleportLocation, FrameDeltaTime, InterpSpeed);
 	Owner->SetActorLocationAndRotation(InterpLocation, LookAtRotation);
 	
